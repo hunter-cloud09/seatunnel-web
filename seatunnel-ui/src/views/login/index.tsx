@@ -28,6 +28,7 @@ import {
 } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
 import { useForm } from './use-form'
+import logo from '../../../public/logo-favicon.png'
 
 const Login = defineComponent({
   setup() {
@@ -53,9 +54,10 @@ const Login = defineComponent({
             class='w-full h-screen bg-gray-100'
           >
             <div class='w-96 bg-white px-16 py-20 border border-gray-100 rounded-2xl'>
-              <h2 class='text-2xl mb-16 font-bold'>
+              {/* <h2 class='text-2xl mb-16 font-bold'>
                 {this.t('login.login_to_sea_tunnel')}
-              </h2>
+              </h2> */}
+              <img style={{height:'150px',marginBottom: '20px'}} src={logo} alt="" />
               <NForm rules={this.rules} ref='loginFormRef' class='mb-4'>
                 <NFormItem
                   label={this.t('login.username')}

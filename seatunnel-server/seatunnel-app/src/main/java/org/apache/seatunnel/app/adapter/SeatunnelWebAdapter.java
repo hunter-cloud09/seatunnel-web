@@ -77,6 +77,7 @@ public class SeatunnelWebAdapter implements WebMvcConfigurer {
                         "/swagger-resources/**",
                         "/webjars/**",
                         "/v2/**",
+                        "/seatunnel/**",
                         "*.html",
                         "/ui/**",
                         "/error",

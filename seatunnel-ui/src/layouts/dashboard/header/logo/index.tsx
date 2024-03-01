@@ -17,13 +17,15 @@
 
 import { defineComponent } from 'vue'
 import { NSpace } from 'naive-ui'
+import logo from '../../../../../public/logo-favicon.png'
 
 const Logo = defineComponent({
   setup() {},
   render() {
     return (
       <NSpace justify='start' align='center' class='h-16 w-48 ml-12'>
-        <h2 class='text-2xl font-bold'>SeaTunnel</h2>
+        {/* <h2 class='text-2xl font-bold'>SeaTunnel</h2> */}
+        <img style={{height:'60px'}} src={logo} alt="" />
       </NSpace>
     )
   }
