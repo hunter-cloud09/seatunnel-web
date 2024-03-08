@@ -76,9 +76,10 @@ public class JobExecutorServiceImpl implements IJobExecutorService {
     }
 
     public String writeJobConfigIntoConfFile(String jobConfig, Long jobDefineId) {
-//        String projectRoot = System.getProperty("SEATUNNEL_HOME");
-//        String filePath =
-//                projectRoot + File.separator + "json" + File.separator + jobDefineId + ".conf";
+        //        String projectRoot = System.getProperty("SEATUNNEL_HOME");
+        //        String filePath =
+        //                projectRoot + File.separator + "json" + File.separator + jobDefineId +
+        // ".conf";
         String filePath = "/dolphinscheduler/default/resources/seatunnel";
         try {
             File file = new File(filePath);
