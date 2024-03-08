@@ -51,6 +51,7 @@ import org.apache.seatunnel.app.service.IJobInstanceService;
 import org.apache.seatunnel.app.service.IJobTaskService;
 import org.apache.seatunnel.common.constants.PluginType;
 import org.apache.seatunnel.common.utils.ExceptionUtils;
+import org.apache.seatunnel.common.utils.JsonUtils;
 import org.apache.seatunnel.common.utils.SeaTunnelException;
 import org.apache.seatunnel.datasource.plugin.api.model.TableField;
 import org.apache.seatunnel.server.common.CodeGenerateUtils;
@@ -68,6 +69,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -266,8 +270,14 @@ public class JobTaskServiceImpl extends SeatunnelBaseServiceImpl implements IJob
                 return jobTaskCheckRes;
             }
             // check the config can be generated
-            jobInstanceService.generateJobConfig(
-                    version.getJobId(), tasks, lines, version.getEnv());
+            String jobConfig =
+                    jobInstanceService.generateJobConfig(
+                            version.getJobId(), tasks, lines, version.getEnv());
+
+            String jobName = JsonUtils.parseObject(version.getEnv()).get("job.name").textValue();
+            // save job config to file
+            writeJobConfigIntoConfFile(jobConfig, jobName);
+
             // TODO check schema output and input matched
         } catch (SeaTunnelException e) {
             log.error(ExceptionUtils.getMessage(e));
@@ -279,6 +289,27 @@ public class JobTaskServiceImpl extends SeatunnelBaseServiceImpl implements IJob
         jobLineDao.deleteLinesByVersionId(jobVersionId);
         jobLineDao.insertLines(lines);
         return null;
+    }
+
+    public void writeJobConfigIntoConfFile(String jobConfig, String jobName) {
+        String filePath =
+                String.format("/dolphinscheduler/default/resources/seatunnel/%s.conf", jobName);
+        try {
+            File file = new File(filePath);
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();
+            }
+
+            FileWriter fileWriter = new FileWriter(file);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write(jobConfig);
+            bufferedWriter.close();
+
+            log.info("File created and content written successfully. path: " + filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private JobTaskCheckRes checkPluginSchemaIntegrity(JobTaskInfo taskInfo) throws IOException {
